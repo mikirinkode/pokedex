@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_elevation.dart';
-import 'package:pokedex/core/theme/app_typography.dart';
 import 'package:pokedex/ui/widgets/sort_button.dart';
 
 import '../../core/theme/app_color.dart';
@@ -16,7 +15,7 @@ class PokemonSearchBar extends StatelessWidget {
       decoration: BoxDecoration(color: AppColor.primary),
       child: Padding(
         padding:
-            const EdgeInsets.only(right: 16.0, left: 16, top: 0, bottom: 32),
+            const EdgeInsets.only(right: 16.0, left: 16, top: 0, bottom: 20),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [

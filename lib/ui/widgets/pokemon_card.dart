@@ -22,51 +22,54 @@ class PokemonCard extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            height: 44,
+            height: 48,
             decoration: BoxDecoration(
               color: AppColor.grayscaleBackground,
               borderRadius: BorderRadius.circular(7),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    "#999",
-                    style:
-                    AppTypography.caption.copyWith(color: AppColor.grayscaleMedium, ),
-                    textAlign: TextAlign.end,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "#999",
+                      style:
+                      AppTypography.caption.copyWith(color: AppColor.grayscaleMedium, ),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
-                ),
-                Image.network(
-                  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-                  width: 72,
-                  height: 72,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return SizedBox(
-                      width: 72,
-                      height: 72,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                              : null,
+                  Image.network(
+                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+                    width: 72,
+                    height: 72,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return SizedBox(
+                        width: 72,
+                        height: 72,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                Text(
-                  "Pokemon Name",
-                  style: AppTypography.bodyText3,
-                )
-              ],
+                      );
+                    },
+                  ),
+                  Text(
+                    "Pokemon Name",
+                    style: AppTypography.bodyText3,
+                  )
+                ],
+              ),
             ),
           ),
         ],
