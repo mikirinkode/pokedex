@@ -1,78 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_elevation.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
+import 'package:pokedex/ui/widgets/pokemon_image_widget.dart';
 
 import '../../core/theme/app_color.dart';
+import '../../data/models/pokemon_model.dart';
 
 class PokemonCard extends StatelessWidget {
-  const PokemonCard({super.key});
+  final PokemonModel pokemon;
+
+  final Function() onTapped;
+
+  const PokemonCard({required this.pokemon, required this.onTapped, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-        color: AppColor.grayscaleWhite,
-        boxShadow: [
-          AppElevation.dropShadow2dp
-        ],
-      ),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Container(
-            width: double.infinity,
-            height: 48,
-            decoration: BoxDecoration(
-              color: AppColor.grayscaleBackground,
-              borderRadius: BorderRadius.circular(7),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      "#999",
-                      style:
-                      AppTypography.caption.copyWith(color: AppColor.grayscaleMedium, ),
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
-                  Image.network(
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-                    width: 72,
-                    height: 72,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return SizedBox(
-                        width: 72,
-                        height: 72,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Text(
-                    "Pokemon Name",
-                    style: AppTypography.bodyText3,
-                  )
-                ],
+    return GestureDetector(
+      onTap: onTapped,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColor.grayscaleWhite,
+          boxShadow: [AppElevation.dropShadow2dp],
+        ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColor.grayscaleBackground,
+                borderRadius: BorderRadius.circular(7),
               ),
             ),
-          ),
-        ],
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Text(
+                          pokemon.getPaddedIndex(),
+                          style: AppTypography.caption.copyWith(
+                            color: AppColor.grayscaleMedium,
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: PokemonImageWidget(
+                          size: 72,
+                          imageUrl: pokemon.getImageUrl()),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          pokemon.getName(),
+                          style: AppTypography.bodyText3,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

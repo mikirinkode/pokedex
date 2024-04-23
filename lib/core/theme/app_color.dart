@@ -72,7 +72,7 @@ class AppColor {
       case PokemonType.typeWater:
         return AppColor.typeWater;
       default:
-        return Colors.black; // Return a default color if the type is not found
+        return Colors.black;
     }
   }
 }
