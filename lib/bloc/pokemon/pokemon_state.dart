@@ -12,9 +12,9 @@ class PokemonInitial extends PokemonState {}
 class PokemonLoading extends PokemonState {}
 
 class PokemonListLoaded extends PokemonState {
-  final List<PokemonModel> pokemonList;
+  final PagingController<int, PokemonModel> controller;
 
-  PokemonListLoaded(this.pokemonList);
+  PokemonListLoaded(this.controller);
 }
 
 class PokemonDetailLoaded extends PokemonState {

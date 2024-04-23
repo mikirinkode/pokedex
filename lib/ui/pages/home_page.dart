@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_cubit.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_detail_cubit.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_state.dart';
@@ -7,9 +8,9 @@ import 'package:pokedex/ui/pages/detail_page.dart';
 
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_elevation.dart';
+import '../../data/models/pokemon_model.dart';
 import '../widgets/pokemon_card.dart';
 import '../widgets/pokemon_search_bar.dart';
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -37,7 +38,7 @@ class HomePage extends StatelessWidget {
       body: BlocProvider(
         create: (context) {
           final cubit = PokemonListCubit();
-          cubit.getPokemonList();
+          cubit.getPokemonList(0);
           return cubit;
         },
         child: Column(
@@ -56,6 +57,7 @@ class HomePage extends StatelessWidget {
                     ),
                     child: BlocBuilder<PokemonListCubit, PokemonState>(
                       builder: (context, state) {
+                        print("HomePage: state: $state");
                         if (state is PokemonLoading) {
                           return const Center(
                             child: CircularProgressIndicator(),
@@ -65,34 +67,36 @@ class HomePage extends StatelessWidget {
                             child: Text(state.message),
                           );
                         } else if (state is PokemonListLoaded) {
-                          return GridView.builder(
+                          return PagedGridView<int, PokemonModel>(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 24, horizontal: 12),
                             physics: const BouncingScrollPhysics(),
+                            pagingController: state.controller,
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    mainAxisSpacing: 8,
-                                    crossAxisSpacing: 8,
-                                    childAspectRatio: 1),
-                            itemBuilder: (_, index) => PokemonCard(
-                              pokemon: state.pokemonList.elementAt(index),
-                              onTapped: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            BlocProvider.value(
-                                              value: BlocProvider.of<
-                                                  PokemonDetailCubit>(context)
-                                                ..getPokemonDetail(state
-                                                    .pokemonList[index]
-                                                    .getId()),
-                                              child: DetailPage(),
-                                            )));
-                              },
-                            ),
-                            itemCount: state.pokemonList.length,
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                childAspectRatio: 1),
+                            builderDelegate: PagedChildBuilderDelegate<
+                                PokemonModel>(
+                                itemBuilder: (context, item, index) =>
+                                    PokemonCard(
+                                      pokemon: item,
+                                      onTapped: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BlocProvider.value(
+                                                      value: BlocProvider.of<
+                                                          PokemonDetailCubit>(
+                                                          context)
+                                                        ..getPokemonDetail(item.getId()),
+                                                      child: DetailPage(),
+                                                    )));
+                                      },
+                                    )),
                           );
                         } else {
                           return Container();
@@ -107,3 +111,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+

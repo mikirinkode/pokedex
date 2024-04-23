@@ -1,27 +1,45 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex/bloc/pokemon/pokemon_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pokedex/bloc/pokemon/pokemon_state.dart';
 import 'package:pokedex/data/models/pokemon_response_model.dart';
 
 import '../../core/values/constants.dart';
+import '../../data/models/pokemon_model.dart';
 
 class PokemonListCubit extends Cubit<PokemonState> {
-  PokemonListCubit() : super(PokemonInitial());
+  final _pageSize = 8;
+  final PagingController<int, PokemonModel> pagingController =
+  PagingController(firstPageKey: 0);
 
-  Future<void> getPokemonList() async {
-    try {
+  PokemonListCubit() : super(PokemonInitial()) {
       emit(PokemonLoading());
-      final response = await http.get(Uri.parse(AppConstants.baseUrl));
+    pagingController.addPageRequestListener((pageKey) {
+      getPokemonList(pageKey);
+    });
+  }
+
+  Future<void> getPokemonList(int pageKey) async {
+    var uri = "${AppConstants.baseUrl}?offset=$pageKey&limit=$_pageSize";
+    try {
+      final response = await http.get(Uri.parse(uri));
       if (response.statusCode == 200) {
         var responseModel = PokemonResponseModel.fromJson(jsonDecode(response.body));
-        emit(PokemonListLoaded(responseModel.results));
+        final isLastPage = responseModel.next == null;
+        if (isLastPage) {
+          pagingController.appendLastPage(responseModel.results);
+        } else {
+          final nextPageKey = pageKey + responseModel.results.length;
+
+          pagingController.appendPage(responseModel.results, nextPageKey);
+        }
+        emit(PokemonListLoaded(pagingController));
       } else {
         emit(PokemonError('Failed to load Pokemon list'));
       }
     } catch (e) {
-      print("error: $e");
       emit(PokemonError(e.toString()));
     }
   }

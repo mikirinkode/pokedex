@@ -2,7 +2,7 @@ import 'pokemon_model.dart';
 
 class PokemonResponseModel {
   final int count;
-  final String next;
+  final String? next;
   final String? previous;
   final List<PokemonModel> results;
 
