@@ -1,22 +1,22 @@
 
 
 class PokemonType {
-  static const String typeBug = "Bug";
-  static const String typeDark = "Dark";
-  static const String typeDragon = "Dragon";
-  static const String typeElectric = "Electric";
-  static const String typeFairy = "Fairy";
-  static const String typeFighting = "Fighting";
-  static const String typeFire = "Fire";
-  static const String typeFlying = "Flying";
-  static const String typeGhost = "Ghost";
-  static const String typeNormal = "Normal";
-  static const String typeGrass = "Grass";
-  static const String typeGround = "Ground";
-  static const String typeIce = "Ice";
-  static const String typePoison = "Poison";
-  static const String typePsychic = "Psychic";
-  static const String typeRock = "Rock";
-  static const String typeSteel = "Steel";
-  static const String typeWater = "Water";
+  static const String typeBug = "bug";
+  static const String typeDark = "dark";
+  static const String typeDragon = "dragon";
+  static const String typeElectric = "electric";
+  static const String typeFairy = "fairy";
+  static const String typeFighting = "fighting";
+  static const String typeFire = "fire";
+  static const String typeFlying = "flying";
+  static const String typeGhost = "ghost";
+  static const String typeNormal = "normal";
+  static const String typeGrass = "grass";
+  static const String typeGround = "ground";
+  static const String typeIce = "ice";
+  static const String typePoison = "poison";
+  static const String typePsychic = "psychic";
+  static const String typeRock = "rock";
+  static const String typeSteel = "steel";
+  static const String typeWater = "water";
 }

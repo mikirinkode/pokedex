@@ -24,7 +24,6 @@ class AppTheme {
           elevation: 0,
           titleTextStyle:
               AppTypography.headline.copyWith(color: AppColor.grayscaleWhite),
-          titleSpacing: 0,
           foregroundColor: AppColor.grayscaleWhite
         ));
   }
