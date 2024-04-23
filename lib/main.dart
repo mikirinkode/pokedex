@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         title: 'Pokedex',
         theme: AppTheme.lightTheme(),
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: const HomePage(),
       ),
     );
   }

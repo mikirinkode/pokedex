@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_elevation.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
+import 'package:pokedex/core/utils/text_utils.dart';
 import 'package:pokedex/ui/widgets/pokemon_image_widget.dart';
 
 import '../../core/theme/app_color.dart';
@@ -53,14 +54,17 @@ class PokemonCard extends StatelessWidget {
                     ),
                     Center(
                       child: PokemonImageWidget(
-                          size: 72,
-                          imageUrl: pokemon.getImageUrl()),
+                        size: 72,
+                        imageUrl: pokemon.getImageUrl(),
+                        fgColor: AppColor.grayscaleMedium,
+                        bgColor: AppColor.grayscaleLight,
+                      ),
                     ),
                     Positioned.fill(
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Text(
-                          pokemon.getName(),
+                          TextUtils.capitalizeFirst(pokemon.name),
                           style: AppTypography.bodyText3,
                         ),
                       ),

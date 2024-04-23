@@ -9,8 +9,10 @@ import 'package:pokedex/ui/pages/detail_page.dart';
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_elevation.dart';
 import '../../data/models/pokemon_model.dart';
+import '../widgets/error_message_widget.dart';
 import '../widgets/pokemon_card.dart';
 import '../widgets/pokemon_search_bar.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -31,7 +33,7 @@ class HomePage extends StatelessWidget {
             color: AppColor.grayscaleWhite,
           ),
         ),
-        title: Text(
+        title: const Text(
           "Pokédex",
         ),
       ),
@@ -57,14 +59,15 @@ class HomePage extends StatelessWidget {
                     ),
                     child: BlocBuilder<PokemonListCubit, PokemonState>(
                       builder: (context, state) {
-                        print("HomePage: state: $state");
                         if (state is PokemonLoading) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
                         } else if (state is PokemonError) {
                           return Center(
-                            child: Text(state.message),
+                            child: ErrorMessageWidget(
+                              errorMessage: state.message,
+                            ),
                           );
                         } else if (state is PokemonListLoaded) {
                           return PagedGridView<int, PokemonModel>(
@@ -73,30 +76,31 @@ class HomePage extends StatelessWidget {
                             physics: const BouncingScrollPhysics(),
                             pagingController: state.controller,
                             gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                childAspectRatio: 1),
-                            builderDelegate: PagedChildBuilderDelegate<
-                                PokemonModel>(
-                                itemBuilder: (context, item, index) =>
-                                    PokemonCard(
-                                      pokemon: item,
-                                      onTapped: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BlocProvider.value(
-                                                      value: BlocProvider.of<
-                                                          PokemonDetailCubit>(
-                                                          context)
-                                                        ..getPokemonDetail(item.getId()),
-                                                      child: DetailPage(),
-                                                    )));
-                                      },
-                                    )),
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    childAspectRatio: 1),
+                            builderDelegate:
+                                PagedChildBuilderDelegate<PokemonModel>(
+                                    itemBuilder: (context, item, index) =>
+                                        PokemonCard(
+                                          pokemon: item,
+                                          onTapped: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BlocProvider.value(
+                                                          value: BlocProvider
+                                                              .of<PokemonDetailCubit>(
+                                                                  context)
+                                                            ..getPokemonDetail(
+                                                                item.getId()),
+                                                          child: const DetailPage(),
+                                                        )));
+                                          },
+                                        )),
                           );
                         } else {
                           return Container();
@@ -111,4 +115,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-

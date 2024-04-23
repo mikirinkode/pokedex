@@ -6,7 +6,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_state.dart';
 import 'package:pokedex/data/models/pokemon_response_model.dart';
 
-import '../../core/values/constants.dart';
+import '../../core/values/url_constants.dart';
 import '../../data/models/pokemon_model.dart';
 
 class PokemonListCubit extends Cubit<PokemonState> {
@@ -22,7 +22,7 @@ class PokemonListCubit extends Cubit<PokemonState> {
   }
 
   Future<void> getPokemonList(int pageKey) async {
-    var uri = "${AppConstants.baseUrl}?offset=$pageKey&limit=$_pageSize";
+    var uri = "${UrlConstants.baseUrl}?offset=$pageKey&limit=$_pageSize";
     try {
       final response = await http.get(Uri.parse(uri));
       if (response.statusCode == 200) {

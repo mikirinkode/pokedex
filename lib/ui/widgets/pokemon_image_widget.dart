@@ -4,7 +4,9 @@ import 'package:pokedex/core/theme/app_color.dart';
 class PokemonImageWidget extends StatelessWidget {
   final double size;
   final String imageUrl;
-  const PokemonImageWidget({required this.size, required this.imageUrl, super.key});
+  final Color fgColor;
+  final Color bgColor;
+  const PokemonImageWidget({required this.size, required this.imageUrl, required this.fgColor, required this.bgColor, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,8 @@ class PokemonImageWidget extends StatelessWidget {
           height: size,
           child: Center(
             child: CircularProgressIndicator(
+              color: fgColor,
+              backgroundColor: bgColor,
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
                   loadingProgress.expectedTotalBytes!

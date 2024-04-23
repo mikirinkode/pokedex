@@ -1,4 +1,6 @@
+import 'package:pokedex/core/utils/text_utils.dart';
 import 'package:pokedex/core/values/pokemon_type_constants.dart';
+import 'package:pokedex/core/values/url_constants.dart';
 
 import 'pokemon_ability_model.dart';
 import 'pokemon_stat_model.dart';
@@ -38,16 +40,12 @@ class PokemonDetailModel {
     );
   }
 
-  String getName() {
-    return name[0].toUpperCase() + name.substring(1);
-  }
-
   String getFormattedId() {
     return '#${"$id".padLeft(3, '0')}';
   }
 
   String getImageUrl() {
-    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png';
+    return UrlConstants.getPokemonImageUrl(id.toString());
   }
 
   String getWeight() {
@@ -96,10 +94,11 @@ class PokemonDetailModel {
   String getAbilities() {
     var cAbilities = "";
     abilities?.forEach((item) {
+      var value = TextUtils.capitalizeFirst(item.ability.abilityName);
       if (item.ability.abilityName == abilities?.last.ability.abilityName) {
-        cAbilities += item.ability.abilityName;
+        cAbilities += value;
       } else {
-        cAbilities += "${item.ability.abilityName}\n";
+        cAbilities += "$value\n";
       }
     });
     return cAbilities;

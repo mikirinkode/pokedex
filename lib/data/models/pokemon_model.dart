@@ -1,3 +1,5 @@
+import 'package:pokedex/core/values/url_constants.dart';
+
 import 'pokemon_ability_model.dart';
 import 'pokemon_stat_model.dart';
 import 'pokemon_type_model.dart';
@@ -19,17 +21,13 @@ class PokemonModel {
   }
 
   String getImageUrl() {
-    final index = url?.split('/').where((element) => element.isNotEmpty).last;
-    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png';
+    final index = url?.split('/').where((element) => element.isNotEmpty).last ?? "0";
+    return UrlConstants.getPokemonImageUrl(index);
   }
 
   String getPaddedIndex() {
     final index = url?.split('/').where((element) => element.isNotEmpty).last;
     return '#${index?.padLeft(3, '0')}';
-  }
-
-  String getName() {
-    return name[0].toUpperCase() + name.substring(1);
   }
 
   int getId() {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
+import 'package:pokedex/core/utils/text_utils.dart';
 
 import '../../core/theme/app_color.dart';
 
 class PokemonTypeChip extends StatelessWidget {
   final type;
+
   const PokemonTypeChip({required this.type, super.key});
 
   @override
@@ -16,7 +18,7 @@ class PokemonTypeChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
-        type,
+        TextUtils.capitalizeFirst(type),
         style: AppTypography.subtitle3.copyWith(color: AppColor.grayscaleWhite),
       ),
     );
