@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex/data/models/pokemon_model.dart';
 
 import '../../data/models/pokemon_detail_model.dart';
@@ -14,6 +15,12 @@ class PokemonListLoaded extends PokemonState {
   final List<PokemonModel> pokemonList;
 
   PokemonListLoaded(this.pokemonList);
+}
+
+class PokemonDetailLoaded extends PokemonState {
+  final PokemonDetailModel pokemon;
+
+  PokemonDetailLoaded(this.pokemon);
 }
 
 class PokemonError extends PokemonState {
