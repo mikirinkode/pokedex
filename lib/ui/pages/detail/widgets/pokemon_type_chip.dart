@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
 import 'package:pokedex/core/utils/text_utils.dart';
 
-import '../../core/theme/app_color.dart';
+import '../../../../core/theme/app_color.dart';
 
 class PokemonTypeChip extends StatelessWidget {
-  final type;
+  final String type;
 
   const PokemonTypeChip({required this.type, super.key});
 

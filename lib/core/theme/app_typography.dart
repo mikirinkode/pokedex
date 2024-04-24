@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokedex/core/theme/app_color.dart';
 class AppTypography {
   //Header
   static var headline = GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold);

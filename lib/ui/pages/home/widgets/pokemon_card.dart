@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_elevation.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
 import 'package:pokedex/core/utils/text_utils.dart';
-import 'package:pokedex/ui/widgets/pokemon_image_widget.dart';
+import 'package:pokedex/ui/global_widgets/pokemon_image_widget.dart';
 
-import '../../core/theme/app_color.dart';
-import '../../data/models/pokemon_model.dart';
+import '../../../../core/theme/app_color.dart';
+import '../../../../data/models/pokemon_model.dart';
 
 class PokemonCard extends StatelessWidget {
   final PokemonModel pokemon;

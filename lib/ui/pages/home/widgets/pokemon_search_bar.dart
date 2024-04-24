@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/core/theme/app_elevation.dart';
-import 'package:pokedex/ui/widgets/sort_button.dart';
+import 'package:pokedex/ui/pages/home/widgets/sort_button.dart';
 
-import '../../core/theme/app_color.dart';
+import '../../../../core/theme/app_color.dart';
 
 class PokemonSearchBar extends StatelessWidget {
   final Function() onSortTapped;
