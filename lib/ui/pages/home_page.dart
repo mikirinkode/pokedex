@@ -83,8 +83,9 @@ class HomePage extends StatelessWidget {
                                     childAspectRatio: 1),
                             builderDelegate:
                                 PagedChildBuilderDelegate<PokemonModel>(
-                                    itemBuilder: (context, item, index) =>
-                                        PokemonCard(
+                                    itemBuilder: (context, item, index) {
+                                      print("index: ${index + 1}. total count: ${state.totalCount}");
+                                        return PokemonCard(
                                           pokemon: item,
                                           onTapped: () {
                                             Navigator.push(
@@ -97,10 +98,12 @@ class HomePage extends StatelessWidget {
                                                                   context)
                                                             ..getPokemonDetail(
                                                                 item.getId()),
-                                                          child: const DetailPage(),
+                                                          child: DetailPage(pokemonId: item.getId(), totalCount: state.totalCount, index: index+1),
                                                         )));
                                           },
-                                        )),
+                                        );
+                                    }
+                        ),
                           );
                         } else {
                           return Container();

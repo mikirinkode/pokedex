@@ -4,7 +4,6 @@ import 'package:pokedex/bloc/pokemon/pokemon_detail_cubit.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_state.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
 import 'package:pokedex/core/utils/text_utils.dart';
-import 'package:pokedex/core/values/pokemon_type_constants.dart';
 import 'package:pokedex/ui/widgets/error_message_widget.dart';
 import 'package:pokedex/ui/widgets/pokemon_type_chip.dart';
 
@@ -16,7 +15,15 @@ import '../widgets/custom_divider.dart';
 import '../widgets/pokemon_image_widget.dart';
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
+  final int pokemonId;
+  final int totalCount;
+  final int index;
+
+  const DetailPage(
+      {required this.pokemonId,
+      required this.totalCount,
+      required this.index,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -65,15 +72,15 @@ class DetailPage extends StatelessWidget {
                   Expanded(
                       child: Center(
                           child: ErrorMessageWidget(
-                            errorMessage: state.message,
-                          ))),
+                    errorMessage: state.message,
+                  ))),
                 ],
               ),
             );
           } else if (state is PokemonDetailLoaded) {
             return Scaffold(
               backgroundColor:
-              AppColor.getPokemonTypeColor(state.pokemon.getPokemonType()),
+                  AppColor.getPokemonTypeColor(state.pokemon.getPokemonType()),
               body: SafeArea(
                 child: Stack(
                   children: [
@@ -89,26 +96,31 @@ class DetailPage extends StatelessWidget {
                       ),
                     ),
                     Positioned.fill(
+                        child: Container(
+                            padding: const EdgeInsets.all(8),
+                            alignment: Alignment.topRight,
+                            height: 200,
+                            child: Image.asset("assets/icons/pokeball.png",
+                                opacity: const AlwaysStoppedAnimation(.1)))),
+                    Positioned.fill(
                         child: Column(
-                          children: [
-                            Container(
-                                padding: const EdgeInsets.all(8),
-                                alignment: Alignment.topRight,
-                                height: 200,
-                                child: Image.asset("assets/icons/pokeball.png",
-                                    opacity: const AlwaysStoppedAnimation(.1))),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: AppElevation.innerShadow,
-                                      borderRadius: BorderRadius.circular(8),
-                                    )),
-                              ),
-                            )
-                          ],
-                        )),
+                      children: [
+                        const SizedBox(
+                          height: 150,
+                        ),
+                        navigationRow(context),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                              boxShadow: AppElevation.innerShadow,
+                              borderRadius: BorderRadius.circular(8),
+                            )),
+                          ),
+                        )
+                      ],
+                    )),
                     Positioned.fill(
                         top: 100, child: detailContent(pokemon: state.pokemon)),
                   ],
@@ -120,6 +132,64 @@ class DetailPage extends StatelessWidget {
           return Container();
         },
       ),
+    );
+  }
+
+  Widget navigationRow(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child: (pokemonId > 1)
+                ? Center(
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider.value(
+                              value:
+                                  BlocProvider.of<PokemonDetailCubit>(context)
+                                    ..getPokemonDetail(pokemonId - 1),
+                              child: DetailPage(
+                                  pokemonId: pokemonId - 1,
+                                  totalCount: totalCount,
+                                  index: index -1),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Image.asset("assets/icons/chevron_left.png",
+                          height: 32, color: AppColor.grayscaleWhite),
+                    ),
+                  )
+                : Container()),
+        Expanded(child: Container()),
+        Expanded(
+            child: (index < totalCount)
+                ? Center(
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider.value(
+                              value:
+                                  BlocProvider.of<PokemonDetailCubit>(context)
+                                    ..getPokemonDetail(pokemonId + 1),
+                              child: DetailPage(
+                                  pokemonId: pokemonId + 1,
+                                  totalCount: totalCount,
+                                  index: index + 1),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Image.asset("assets/icons/chevron_right.png",
+                          height: 32, color: AppColor.grayscaleWhite),
+                    ),
+                  )
+                : Container()),
+      ],
     );
   }
 
@@ -139,13 +209,13 @@ class DetailPage extends StatelessWidget {
           child: Text(
             name,
             style:
-            AppTypography.headline.copyWith(color: AppColor.grayscaleWhite),
+                AppTypography.headline.copyWith(color: AppColor.grayscaleWhite),
           ),
         ),
         Text(
           id,
           style:
-          AppTypography.subtitle2.copyWith(color: AppColor.grayscaleWhite),
+              AppTypography.subtitle2.copyWith(color: AppColor.grayscaleWhite),
         ),
         const SizedBox(width: 16)
       ],
@@ -158,9 +228,13 @@ class DetailPage extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          PokemonImageWidget(size: 200, imageUrl: pokemon.getImageUrl(),
+          PokemonImageWidget(
+            size: 200,
+            imageUrl: pokemon.getImageUrl(),
             fgColor: AppColor.getPokemonTypeColor(pokemon.getPokemonType()),
-            bgColor: AppColor.getPokemonTypeColor(pokemon.getPokemonType()).withOpacity(0.2),),
+            bgColor: AppColor.getPokemonTypeColor(pokemon.getPokemonType())
+                .withOpacity(0.2),
+          ),
           pokemonTypeRow(types: pokemon.types),
           const SizedBox(
             height: 16,
@@ -203,8 +277,7 @@ class DetailPage extends StatelessWidget {
                 children: pokemon
                     .getStatMap()
                     .entries
-                    .map((e) =>
-                    pokemonBaseStatsRow(
+                    .map((e) => pokemonBaseStatsRow(
                         title: pokemon.getTypeName(e.key),
                         value: e.value,
                         pokemonType: pokemon.getPokemonType()))
@@ -218,21 +291,21 @@ class DetailPage extends StatelessWidget {
   Widget pokemonTypeRow({required List<PokemonTypeModel>? types}) {
     return (types != null)
         ? Row(
-      mainAxisSize: MainAxisSize.min,
-      children: types
-          .map((e) =>
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: PokemonTypeChip(type: e.type.typeName),
-          ))
-          .toList(),
-    )
+            mainAxisSize: MainAxisSize.min,
+            children: types
+                .map((e) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: PokemonTypeChip(type: e.type.typeName),
+                    ))
+                .toList(),
+          )
         : Container();
   }
 
-  Widget pokemonSection({required String title,
-    required String pokemonType,
-    required Widget body}) {
+  Widget pokemonSection(
+      {required String title,
+      required String pokemonType,
+      required Widget body}) {
     return Column(
       children: [
         const SizedBox(
@@ -251,9 +324,10 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  Widget pokemonAboutWidget({required String title,
-    required String value,
-    required String? iconPath}) {
+  Widget pokemonAboutWidget(
+      {required String title,
+      required String value,
+      required String? iconPath}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -263,19 +337,19 @@ class DetailPage extends StatelessWidget {
             (iconPath == null)
                 ? Container()
                 : Row(
-              children: [
-                Container(height: 16, child: Image.asset(iconPath)),
-                const SizedBox(
-                  width: 8,
-                )
-              ],
-            ),
+                    children: [
+                      Container(height: 16, child: Image.asset(iconPath)),
+                      const SizedBox(
+                        width: 8,
+                      )
+                    ],
+                  ),
             Flexible(
                 child: Text(
-                  value,
-                  style: AppTypography.bodyText3,
-                  textAlign: TextAlign.center,
-                ))
+              value,
+              style: AppTypography.bodyText3,
+              textAlign: TextAlign.center,
+            ))
           ],
         ),
         const SizedBox(
@@ -286,9 +360,10 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  Widget pokemonBaseStatsRow({required String title,
-    required int value,
-    required String pokemonType}) {
+  Widget pokemonBaseStatsRow(
+      {required String title,
+      required int value,
+      required String pokemonType}) {
     return Container(
       child: IntrinsicHeight(
         child: Row(
@@ -317,12 +392,12 @@ class DetailPage extends StatelessWidget {
             ),
             Expanded(
                 child: LinearProgressIndicator(
-                  color: AppColor.getPokemonTypeColor(pokemonType),
-                  backgroundColor:
+              color: AppColor.getPokemonTypeColor(pokemonType),
+              backgroundColor:
                   AppColor.getPokemonTypeColor(pokemonType).withOpacity(0.2),
-                  value: (value / 200),
-                  borderRadius: BorderRadius.circular(16),
-                )),
+              value: (value / 200),
+              borderRadius: BorderRadius.circular(16),
+            )),
             const SizedBox(
               width: 8,
             ),

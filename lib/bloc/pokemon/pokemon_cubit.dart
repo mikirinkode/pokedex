@@ -10,7 +10,7 @@ import '../../core/values/url_constants.dart';
 import '../../data/models/pokemon_model.dart';
 
 class PokemonListCubit extends Cubit<PokemonState> {
-  final _pageSize = 8;
+  final _pageSize = 100;
   final PagingController<int, PokemonModel> pagingController =
   PagingController(firstPageKey: 0);
 
@@ -35,7 +35,7 @@ class PokemonListCubit extends Cubit<PokemonState> {
 
           pagingController.appendPage(responseModel.results, nextPageKey);
         }
-        emit(PokemonListLoaded(pagingController));
+        emit(PokemonListLoaded(pagingController, responseModel.count));
       } else {
         emit(PokemonError('Failed to load Pokemon list'));
       }

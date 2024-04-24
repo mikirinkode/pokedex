@@ -11,7 +11,6 @@ class PokemonDetailCubit extends Cubit<PokemonState> {
   PokemonDetailCubit() : super(PokemonInitial());
 
   Future<void> getPokemonDetail(int id) async {
-    print("getPokemonDetail Called. id: $id");
     try {
       emit(PokemonLoading());
       final response = await http.get(Uri.parse('${UrlConstants.baseUrl}/$id'));

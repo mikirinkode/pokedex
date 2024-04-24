@@ -13,8 +13,9 @@ class PokemonLoading extends PokemonState {}
 
 class PokemonListLoaded extends PokemonState {
   final PagingController<int, PokemonModel> controller;
+  final int totalCount;
 
-  PokemonListLoaded(this.controller);
+  PokemonListLoaded(this.controller, this.totalCount);
 }
 
 class PokemonDetailLoaded extends PokemonState {

@@ -1,9 +1,5 @@
 import 'package:pokedex/core/values/url_constants.dart';
 
-import 'pokemon_ability_model.dart';
-import 'pokemon_stat_model.dart';
-import 'pokemon_type_model.dart';
-
 class PokemonModel {
   final String name;
   final String? url;
