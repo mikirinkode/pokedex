@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pokedex/core/theme/app_typography.dart';
 
 import 'app_color.dart';
@@ -12,13 +13,9 @@ class AppTheme {
         ),
         useMaterial3: true,
         scaffoldBackgroundColor: AppColor.grayscaleWhite,
-        textTheme: const TextTheme(
-            headlineLarge: AppTypography.headline,
-            headlineMedium: AppTypography.subtitle1,
-            headlineSmall: AppTypography.subtitle2,
-            bodyLarge: AppTypography.bodyText1,
-            bodyMedium: AppTypography.bodyText2,
-            bodySmall: AppTypography.bodyText3),
+        textTheme: GoogleFonts.poppinsTextTheme().apply(
+          bodyColor: AppColor.grayscaleDark
+        ),
         appBarTheme: AppBarTheme(
           backgroundColor: AppColor.primary,
           elevation: 0,

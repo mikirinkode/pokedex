@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_cubit.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_detail_cubit.dart';
 import 'package:pokedex/bloc/pokemon/pokemon_state.dart';
+import 'package:pokedex/core/theme/app_typography.dart';
 import 'package:pokedex/ui/pages/detail_page.dart';
 
 import '../../core/theme/app_color.dart';
@@ -12,6 +14,7 @@ import '../../data/models/pokemon_model.dart';
 import '../widgets/error_message_widget.dart';
 import '../widgets/pokemon_card.dart';
 import '../widgets/pokemon_search_bar.dart';
+import '../widgets/shimmer_shape.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -33,8 +36,9 @@ class HomePage extends StatelessWidget {
             color: AppColor.grayscaleWhite,
           ),
         ),
-        title: const Text(
+        title: Text(
           "Pokédex",
+          style: AppTypography.headline,
         ),
       ),
       body: BlocProvider(
@@ -60,9 +64,7 @@ class HomePage extends StatelessWidget {
                     child: BlocBuilder<PokemonListCubit, PokemonState>(
                       builder: (context, state) {
                         if (state is PokemonLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return homePageLoading();
                         } else if (state is PokemonError) {
                           return Center(
                             child: ErrorMessageWidget(
@@ -84,26 +86,27 @@ class HomePage extends StatelessWidget {
                             builderDelegate:
                                 PagedChildBuilderDelegate<PokemonModel>(
                                     itemBuilder: (context, item, index) {
-                                      print("index: ${index + 1}. total count: ${state.totalCount}");
-                                        return PokemonCard(
-                                          pokemon: item,
-                                          onTapped: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BlocProvider.value(
-                                                          value: BlocProvider
-                                                              .of<PokemonDetailCubit>(
-                                                                  context)
-                                                            ..getPokemonDetail(
-                                                                item.getId()),
-                                                          child: DetailPage(pokemonId: item.getId(), totalCount: state.totalCount, index: index+1),
-                                                        )));
-                                          },
-                                        );
-                                    }
-                        ),
+                              return PokemonCard(
+                                pokemon: item,
+                                onTapped: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BlocProvider.value(
+                                                value: BlocProvider.of<
+                                                    PokemonDetailCubit>(context)
+                                                  ..getPokemonDetail(
+                                                      item.getId()),
+                                                child: DetailPage(
+                                                    pokemonId: item.getId(),
+                                                    totalCount:
+                                                        state.totalCount,
+                                                    index: index + 1),
+                                              )));
+                                },
+                              );
+                            }),
                           );
                         } else {
                           return Container();
@@ -115,6 +118,55 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget homePageLoading() {
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 1),
+      itemBuilder: (_, index) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColor.grayscaleWhite,
+          boxShadow: [AppElevation.dropShadow2dp],
+        ),
+        child: Center(
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColor.grayscaleBackground,
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
+              ),
+              const Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: ShimmerShape(height: 10, width: 24),
+                  )),
+              const Center(child: ShimmerShape(height: 62, width: 62)),
+              const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: ShimmerShape(height: 16, width: 64),
+                  )),
+            ],
+          ),
+        ),
+      ),
+      itemCount: 20,
     );
   }
 }

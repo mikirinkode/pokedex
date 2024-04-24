@@ -10,7 +10,7 @@ import '../../core/values/url_constants.dart';
 import '../../data/models/pokemon_model.dart';
 
 class PokemonListCubit extends Cubit<PokemonState> {
-  final _pageSize = 100;
+  final _pageSize = 8;
   final PagingController<int, PokemonModel> pagingController =
   PagingController(firstPageKey: 0);
 

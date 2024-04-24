@@ -32,6 +32,7 @@ class AppColor {
   static const grayscaleLight = Color(0xFFB6B6B6);
   static const grayscaleBackground = Color(0xFFEFEFEF);
   static const grayscaleWhite = Colors.white;
+  static const grayscaleLoading = Color(0xFFD9D9D9);
 
   static Color getPokemonTypeColor(String type) {
     switch (type) {

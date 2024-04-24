@@ -16,7 +16,7 @@ class ErrorMessageWidget extends StatelessWidget {
         children: [
           const Icon(Icons.error, color: AppColor.primary, size: 35,),
           const SizedBox(height: 24,),
-          const Text("Terjadi Kesalahan", style: AppTypography.subtitle1),
+          Text("Terjadi Kesalahan", style: AppTypography.subtitle1),
           const SizedBox(height: 8,),
           Text(errorMessage, textAlign: TextAlign.center,),
         ],

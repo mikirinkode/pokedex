@@ -6,6 +6,7 @@ import 'package:pokedex/core/theme/app_typography.dart';
 import 'package:pokedex/core/utils/text_utils.dart';
 import 'package:pokedex/ui/widgets/error_message_widget.dart';
 import 'package:pokedex/ui/widgets/pokemon_type_chip.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_elevation.dart';
@@ -13,6 +14,7 @@ import '../../data/models/pokemon_detail_model.dart';
 import '../../data/models/pokemon_type_model.dart';
 import '../widgets/custom_divider.dart';
 import '../widgets/pokemon_image_widget.dart';
+import '../widgets/shimmer_shape.dart';
 
 class DetailPage extends StatelessWidget {
   final int pokemonId;
@@ -32,26 +34,7 @@ class DetailPage extends StatelessWidget {
       child: BlocBuilder<PokemonDetailCubit, PokemonState>(
         builder: (context, state) {
           if (state is PokemonLoading) {
-            return SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Image.asset(
-                          "assets/icons/arrow_back.png",
-                          color: AppColor.grayscaleDark,
-                          height: 24,
-                        )),
-                  ),
-                  Expanded(child: Center(child: CircularProgressIndicator())),
-                ],
-              ),
-            );
+            return detailPageLoading(context);
           } else if (state is PokemonError) {
             return SafeArea(
               child: Column(
@@ -153,7 +136,7 @@ class DetailPage extends StatelessWidget {
                               child: DetailPage(
                                   pokemonId: pokemonId - 1,
                                   totalCount: totalCount,
-                                  index: index -1),
+                                  index: index - 1),
                             ),
                           ),
                         );
@@ -190,6 +173,122 @@ class DetailPage extends StatelessWidget {
                   )
                 : Container()),
       ],
+    );
+  }
+
+  Widget detailPageLoading(BuildContext context) {
+    return Container(
+      color: AppColor.grayscaleLight,
+      child: SafeArea(
+        child: Stack(
+          children: [
+            Positioned.fill(
+                child: Container(
+                    padding: const EdgeInsets.all(8),
+                    alignment: Alignment.topRight,
+                    height: 200,
+                    child: Image.asset("assets/icons/pokeball.png",
+                        opacity: const AlwaysStoppedAnimation(.1)))),
+            Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Image.asset(
+                      "assets/icons/arrow_back.png",
+                      color: AppColor.grayscaleWhite,
+                      height: 24,
+                    )),
+                const ShimmerShape(width: 128, height: 24),
+                const Spacer(),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: ShimmerShape(width: 32, height: 18),
+                )
+              ],
+            ),
+            Positioned.fill(
+                child: Column(
+              children: [
+                const SizedBox(
+                  height: 200,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: AppElevation.innerShadow,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )),
+            Positioned.fill(
+              top: 100,
+              child: Column(
+                children: [
+                  const ShimmerShape(width: 200, height: 200),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ShimmerShape(width: 64, height: 24),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      ShimmerShape(width: 64, height: 24),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  const ShimmerShape(width: 64, height: 32),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ShimmerShape(width: 108, height: 108),
+                      SizedBox(width: 8,),
+                      ShimmerShape(width: 108, height: 108),
+                      SizedBox(width: 8,),
+                      ShimmerShape(width: 108, height: 108),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  const ShimmerShape(width: 64, height: 32),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Column(
+                    children: List.generate(6, (index) => const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+                      child: Row(
+                        children: [
+                          ShimmerShape(width: 32, height: 16),
+                          SizedBox(width: 8,),
+                          ShimmerShape(width: 32, height: 16),
+                          SizedBox(width: 8,),
+                          Expanded(child: ShimmerShape(width: 32, height: 12)),
+                        ],
+                      ),
+                    )),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -364,45 +463,43 @@ class DetailPage extends StatelessWidget {
       {required String title,
       required int value,
       required String pokemonType}) {
-    return Container(
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              width: 42,
-              child: Text(
-                title,
-                style: AppTypography.subtitle3
-                    .copyWith(color: AppColor.getPokemonTypeColor(pokemonType)),
-                textAlign: TextAlign.end,
-              ),
+    return IntrinsicHeight(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(
+            width: 42,
+            child: Text(
+              title,
+              style: AppTypography.subtitle3
+                  .copyWith(color: AppColor.getPokemonTypeColor(pokemonType)),
+              textAlign: TextAlign.end,
             ),
-            const SizedBox(
-              width: 8,
-            ),
-            CustomDivider(),
-            const SizedBox(
-              width: 8,
-            ),
-            Text(value.toString().padLeft(3, '0'),
-                style: AppTypography.bodyText3),
-            const SizedBox(
-              width: 8,
-            ),
-            Expanded(
-                child: LinearProgressIndicator(
-              color: AppColor.getPokemonTypeColor(pokemonType),
-              backgroundColor:
-                  AppColor.getPokemonTypeColor(pokemonType).withOpacity(0.2),
-              value: (value / 200),
-              borderRadius: BorderRadius.circular(16),
-            )),
-            const SizedBox(
-              width: 8,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          CustomDivider(),
+          const SizedBox(
+            width: 8,
+          ),
+          Text(value.toString().padLeft(3, '0'),
+              style: AppTypography.bodyText3),
+          const SizedBox(
+            width: 8,
+          ),
+          Expanded(
+              child: LinearProgressIndicator(
+            color: AppColor.getPokemonTypeColor(pokemonType),
+            backgroundColor:
+                AppColor.getPokemonTypeColor(pokemonType).withOpacity(0.2),
+            value: (value / 200),
+            borderRadius: BorderRadius.circular(16),
+          )),
+          const SizedBox(
+            width: 8,
+          ),
+        ],
       ),
     );
   }
