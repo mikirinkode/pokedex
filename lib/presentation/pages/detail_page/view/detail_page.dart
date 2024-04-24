@@ -67,8 +67,7 @@ class _DetailPageContent extends StatelessWidget {
       {required this.pokemon,
       required this.pokemonId,
       required this.totalCount,
-      required this.index,
-      super.key});
+      required this.index});
 
   @override
   Widget build(BuildContext context) {

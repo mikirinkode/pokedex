@@ -1,12 +1,10 @@
-import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:pokedex/data/dto/pokemon_detail_dto.dart';
 import 'package:pokedex/data/dto/pokemon_pagination_dto.dart';
 
-import '../../utils/url_constants.dart';
 import '../../domain/entity/pokemon_detail.dart';
 import '../../domain/entity/pokemon_pagination.dart';
-import 'package:http/http.dart' as http;
+import '../../utils/url_constants.dart';
 
 abstract class Api {
   Future<PokemonPagination?> getPokemonList(

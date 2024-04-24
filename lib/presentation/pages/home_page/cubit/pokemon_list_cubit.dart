@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex/presentation/state/pokemon_state.dart';
 
-import '../../../../utils/url_constants.dart';
 import '../../../../domain/entity/pokemon.dart';
 import '../../../../domain/usecase/pokemon_usecase.dart';
 
